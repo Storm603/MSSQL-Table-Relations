@@ -174,7 +174,6 @@ CREATE TABLE [OrderItems](
 
 ALTER TABLE [OrderItems] ADD CONSTRAINT CPK_OrderItems PRIMARY KEY ([OrderID], [ItemID])
 ALTER TABLE [OrderItems] ADD CONSTRAINT FK_OrderItems_Orders FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
-ALTER TABLE [OrderItems] ADD CONSTRAINT FK_OrderItems_Items FOREIGN KEY (ItemID) REFERENCES Items(ItemID)
 
 INSERT INTO [OrderItems] VALUES 
 	(101,1),
@@ -197,7 +196,10 @@ insert into [Items] VALUES
 insert into [Items] VALUES
 	(4, 'Bread', 1001)
 
-ALTER TABLE [Items] ADD CONSTRAINT FK_Items_ItemTypes FOREIGN KEY (ItemTypeID) REFERENCES [ItemTypes](ItemTypeID)
+
+
+ALTER TABLE [OrderItems] ADD CONSTRAINT FK_OrderItems_Items FOREIGN KEY (ItemID) REFERENCES [Items](ItemID)
+
 
 CREATE TABLE [ItemTypes](
 	[ItemTypeID] INT PRIMARY KEY NOT NULL,
@@ -208,3 +210,60 @@ INSERT INTO [ItemTypes] VALUES
 	(1001, 'Container'),
 	(1002, 'Food'),
 	(1003, 'Food3')
+
+	ALTER TABLE [Items] ADD CONSTRAINT FK_Items_ItemTypes FOREIGN KEY (ItemTypeID) REFERENCES [ItemTypes](ItemTypeID)
+
+
+--6TH TASK
+
+CREATE DATABASE [UniversityDatabase]
+
+USE [UniversityDatabase]
+
+CREATE TABLE [Students](
+	[StudentID] INT PRIMARY KEY NOT NULL,
+	[StudentNumber] INT UNIQUE,
+	[StudentName] NVARCHAR(30) NOT NULL,
+	[MajorID] INT NOT NULL
+)
+
+CREATE TABLE [Payments](
+	[PaymentID] INT PRIMARY KEY NOT NULL,
+	[PaymentDate] DATE,
+	[PaymentAmount] DECIMAL,
+	[StudentID] INT NOT NULL
+)
+
+CREATE TABLE [Majors](
+	[MajorID] INT PRIMARY KEY NOT NULL,
+	[Name] NVARCHAR(30)
+)
+
+CREATE TABLE [Agenda](
+	[StudentID] INT NOT NULL,
+	[SubjectID] INT NOT NULL
+)
+
+CREATE TABLE [Subjects](
+	[SubjectID] INT PRIMARY KEY NOT NULL,
+	[SubjectName] NVARCHAR(50) NOT NULL
+)
+
+ALTER TABLE [Students] ADD CONSTRAINT FK_Students_Majors FOREIGN KEY (MajorID) REFERENCES Majors(MajorID)
+
+ALTER TABLE [Payments] ADD CONSTRAINT FK_Payments_Students FOREIGN KEY (StudentID) REFERENCES Students(StudentID)
+
+ALTER TABLE [Agenda] ADD CONSTRAINT CPK_StudentID_SubjectID PRIMARY KEY (StudentID, SubjectID)
+ALTER TABLE [Agenda] ADD CONSTRAINT FK_StudentID FOREIGN KEY (StudentID) REFERENCES Students(StudentID)
+ALTER TABLE [Agenda] ADD CONSTRAINT FK_SubjectID FOREIGN KEY (SubjectID) REFERENCES Subjects(SubjectID)
+
+
+USE [Geography]
+
+SELECT * FROM [Peaks]
+
+SELECT * FROM [Mountains]
+
+SELECT m.MountainRange, p.PeakName, p.Elevation FROM [Mountains] AS m JOIN [Peaks] AS p ON p.MountainId = m.Id
+WHERE m.MountainRange = 'Rila'
+ORDER BY P.Elevation DESC
